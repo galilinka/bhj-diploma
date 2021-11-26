@@ -3,13 +3,15 @@
  * регистрацией пользователя из приложения
  * Имеет свойство URL, равное '/user'.
  * */
+
 class User {
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
+  static URL = '/user'
   static setCurrent(user) {
-
+    localStorage.setItem(user.id, JSON.stringify(user))
   }
 
   /**
@@ -17,7 +19,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    localStorage.clear()
   }
 
   /**
@@ -25,7 +27,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    localStorage.getItem(uer.id)
   }
 
   /**
@@ -33,7 +35,7 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
-
+    createRequest({callback}) 
   }
 
   /**
@@ -64,7 +66,7 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
-
+    createRequest({data, callback})
   }
 
   /**
@@ -72,6 +74,6 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(callback) {
-
+    createRequest({callback})
   }
 }
