@@ -13,7 +13,16 @@ class AsyncForm {
    * через registerEvents()
    * */
   constructor(element) {
-
+    try {
+      if (!element) {
+        throw console.log('err')
+      } else {
+        this.element = element;
+        this.registerEvents();
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   /**
@@ -21,7 +30,7 @@ class AsyncForm {
    * вызывает метод submit()
    * */
   registerEvents() {
-
+    this.element.addEventListener('submit', this.submit)
   }
 
   /**
@@ -31,19 +40,25 @@ class AsyncForm {
    *  'название поля формы 2': 'значение поля формы 2'
    * }
    * */
-  getData() {
-
-  }
-
+  getData = () => {
+  //console.log([...this.element.querySelectorAll('input')].reduce((input, obj) => obj[input.name] = input.value, {}))
+  let inputs = this.element.querySelectorAll('input');
+  let object = {};
+  inputs.forEach(input => {
+    object[input.name] = input.value;
+  })
+  return object;
+}
   onSubmit(options){
-
+  
   }
 
   /**
    * Вызывает метод onSubmit и передаёт туда
    * данные, полученные из метода getData()
    * */
-  submit() {
-
+  submit = (e) => {
+    e.preventDefault();
+    this.onSubmit(this.getData());
   }
 }

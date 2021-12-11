@@ -3,23 +3,32 @@
  * на сервер.
  * */
 
- const createRequest = async (options = {}) => {
+ const createRequest = (options = {}) => {
+    let {
+      url,
+      data,
+      method,
+      callback
+    } = options;
+  
+    console.log('data', data)
     let formData = null;
-    console.log(options.data)
-    if (options.method === 'GET' && options.data)  {
-        options.url = `${options.url}?mail=${options.data.email}&password=${options.data.password}`
-    } else if (options.method === 'POST' && options.data) {
-        formData = new FormData;
-        formData.append( 'mail', options.data.email);
-        formData.append( 'password', options.data.password);
-    } //put delete 
-    fetch(options.url, options.data && {
-        method: options.method,
-        body: formData ? JSON.stringify(formData) : null,
-    }).then(response => 
-    console.log(response)
-).then(data => options.callback(null, data)).catch(err => options.callback(err))
-};
+    if (method === 'GET' && data) {
+      url = `${url}mail=${data.email}&password=${data.password}`;
+    } else if (method !== 'GET') {
+      formData = {
+        mail: data.email,
+        password: data.password,
+      };
+    }
+    fetch(url, {
+      method,
+      body: formData && JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => callback(null, data))
+    .catch(err => callback(err));
+  };
 
 
 

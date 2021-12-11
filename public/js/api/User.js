@@ -11,7 +11,7 @@ class User {
    * */
   static URL = '/user'
   static setCurrent(user) {
-    localStorage.setItem(user.id, JSON.stringify(user))
+    localStorage.setItem('user', JSON.stringify(user))
   }
 
   /**
@@ -19,7 +19,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-    localStorage.clear()
+    localStorage.removeItem(user)
   }
 
   /**
@@ -27,7 +27,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    localStorage.getItem(uer.id)
+    return localStorage.user || undefined;
   }
 
   /**
@@ -35,7 +35,7 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
-    createRequest({callback}) 
+    createRequest({url: this.URL, callback}) 
   }
 
   /**
@@ -48,7 +48,7 @@ class User {
     createRequest({
       url: this.URL + '/login',
       method: 'POST',
-      responseType: 'json',
+      //responseType: 'json',
       data,
       callback: (err, response) => {
         if (response && response.user) {
@@ -65,15 +65,42 @@ class User {
    * сохранить пользователя через метод
    * User.setCurrent.
    * */
-  static register(data, callback) {
-    createRequest({data, callback})
+   static register(data, callback) {
+    createRequest({
+      url: this.URL + '/register',
+      method: 'POST',
+      data,
+      callback: (err, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+        }
+        callback(err, response);
+      }
+    });
   }
 
   /**
    * Производит выход из приложения. После успешного
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
-  static logout(callback) {
-    createRequest({callback})
+   static logout(callback) {
+    createRequest({
+      url: this.URL + '/register',
+      method: 'POST',
+      data,
+      callback: (err, response) => {
+        if (response && response.user) {
+          this.unsetCurrent(response.user);
+        }
+        callback(err, response);
+      }
+    });
   }
 }
+
+
+User.register({
+  name: 'Vlad',
+  email: 'test@test.ru',
+  password: 'abracadabra'
+})
